@@ -1,8 +1,11 @@
 package com.tenco.spring_blog.user;
 
+import lombok.Data;
+
 public class UserRequest {
 
     // 회원가입용 DTO
+    @Data
     public static class JoinDto{
         private String username;
         private String password;
@@ -30,7 +33,26 @@ public class UserRequest {
 
         // toEntity() <-- 메서드 이름 (이 메서드를 호출하면 User 객체를 반환하는 코드를 작성하시오)
         public User toEntity() {
-            return new User(username,password,email);
+            return User.builder()
+                    .username(username)
+                    .password(password)
+                    .email(email)
+                    .build();
+        }
+
+    }
+
+    @Data
+    public static class LoginDto {
+        private String username;
+        private String password;
+        public void validate() {
+            if (username == null || username.trim().isEmpty()) {
+                throw new IllegalArgumentException("사용자명은 필수 입니다.");
+            }
+            if (password == null || password.trim().isEmpty()) {
+                throw new IllegalArgumentException("사용자명은 필수 입니다.");
+            }
         }
 
     }
