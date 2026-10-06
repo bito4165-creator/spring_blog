@@ -27,13 +27,15 @@ public class Board {
     // 별도 어노테이션이 없으면 필드명이 컬럼명이 됨.
     private String title;
     private String content;
+
     // private String username;
-    // N : 1 , 1: N , N : M
+    // N : 1 , 1 : N , N : M
     // LAZY 전략 , EAGER 전략
-    // LAZY 전략 : 게시글을 조회할 때, 사용자는 조회하지 않고, 실제로 사용할 떄 그 떄 한번 더 조회
+    // LAZY 전략 : 게시글을 조회할 때 사용자는 바로 조회하지 않고, 실제로 사용하 때 그 때 한번더 조회
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id") // board_tb 에 만들어질 외래키 컬럼 이름 설정
     private User user;
+
     // now() <-- 사용하지 않아도 자동으로 PC --> DB 날짜 주입
     @CreationTimestamp
     private Timestamp createdAt; // created_at 컬럼(스프링이 기본값이 스네이크 케이스로 자동 변환 해 줌)

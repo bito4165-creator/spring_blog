@@ -3,22 +3,22 @@ server:
 
 logging:
   level:
-    root: INFO
-    com.tenco.spring_blog: DEBUG
+    root: INFO                       #스프링과 라이브러리는 INFO 이상만 출력
+    com.tenco.spring_blog: DEBUG     #우리 코드는 DEBUG 이상까지
 
 
 spring:
-  # 데이터 베이스 연결 (MySQL)
+  # 데이터 베이스 연결 (H2 메모리 DB 사용)
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 
-    # H2  콘솔 화면 켜기 (http://localhost:8080/h2-console)
-    h2:
-      console:
-        enabled: true
+  # H2  콘솔 화면 켜기 (http://localhost:8080/h2-console)
+  h2:
+    console:
+      enabled: true
 
   # JPA 설정
   jpa:
@@ -37,6 +37,6 @@ spring:
   # 서버 시작시 이 파일 실행
   sql:
     init:
-      mode: always # MySQL 사용시 필수 (always, never)
+      mode: always   # MySQL 사용시 필수  (always, never)
       data-locations:
         - classpath:db/data.sql

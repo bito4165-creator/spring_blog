@@ -142,13 +142,4 @@ public class BoardPersistRepository {
     // 3. 준 영속 상태 : 영속성 컨텍스트에서 분리된 상태
     // 4. 삭제   상태 : 삭제 예정 상태 (트랜잭션 커밋 시 DELETE 쿼리 실행)
 
-
-
 }
-
-
-
-
-
-
-
