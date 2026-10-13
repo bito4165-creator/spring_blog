@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.sql.Timestamp;
 
 @Getter
+@Setter
 @NoArgsConstructor // 필수 (JPA 엔티티 생성시)
 @AllArgsConstructor
 @Table(name = "user_tb")
