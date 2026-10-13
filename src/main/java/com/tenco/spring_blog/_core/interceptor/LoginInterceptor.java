@@ -26,7 +26,6 @@ public class LoginInterceptor implements HandlerInterceptor {
         SessionUserDto sessionUserDto = (session == null) ? null : (SessionUserDto) session.getAttribute(Define.SESSION_USER);
         if (sessionUserDto == null) {
             throw  new Exception401("로그인 먼저 해주세요");
-
         }
         return true;
     }
