@@ -3,6 +3,7 @@ package com.tenco.spring_blog.board;
 import com.tenco.spring_blog._core.error.Exception400;
 import com.tenco.spring_blog._core.error.Exception403;
 import com.tenco.spring_blog._core.error.Exception404;
+import com.tenco.spring_blog.reply.ReplyJpaRepository;
 import com.tenco.spring_blog.user.SessionUserDto;
 import com.tenco.spring_blog.user.User;
 import com.tenco.spring_blog.user.UserJpaRepository;
@@ -28,6 +29,7 @@ public class BoardService {
 
     private final BoardJpaRepository boardJpaRepository;
     private final UserJpaRepository userJpaRepository;
+    private final ReplyJpaRepository replyJpaRepository;
 
     /**
      * 게시글 저장
@@ -119,7 +121,7 @@ public class BoardService {
         Board board = boardJpaRepository.findByIdJoinUser(id)
                 .orElseThrow(() -> new Exception404("게시글 찾을 수 없음"));
         if (!board.isOwner(sessionUser.getId())) {
-            throw new Exception403("본인이 작성한 게시글만 수정할 수 있습니다");
+            throw new Exception404("본인이 작성한 게시글만 수정할 수 있습니다");
         }
         board.update(updateDto);
         log.info("게시글 수정 완료");
@@ -138,7 +140,12 @@ public class BoardService {
             throw new Exception403("본인이 작성한 게시글만 삭제할 수 있습니다");
         }
 
+        // 게시글 삭제전에 외래키조건 충돌전 댓글 전부 삭제
+        replyJpaRepository.deleteByBoardId(id);
+
+        // 게시글 삭제
         boardJpaRepository.deleteById(id);
+
         log.info("게시글 삭제 종료");
     }
 
