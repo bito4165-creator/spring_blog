@@ -62,8 +62,8 @@ public class UserController {
         SessionUserDto sessionUserDto = (SessionUserDto) session.getAttribute(Define.SESSION_USER);
         SessionUserDto updateSessionUserDto = userService.updateById(sessionUserDto.getId(), updateDto);
         // 세션 동기화 처리
-        session.setAttribute(Define.SESSION_USER, sessionUserDto);
-        return "redirect:/";
+        session.setAttribute(Define.SESSION_USER, updateSessionUserDto);
+        return "redirect:/user/detail";
     }
 
     // GET http://localhost:8080/logout
@@ -71,5 +71,14 @@ public class UserController {
     public String logout(HttpSession session) {
         session.invalidate();
         return "redirect:/";
+    }
+
+    // GET http://localhost:8080/user/detail
+    @GetMapping("/user/detail")
+    public String detail(Model model, HttpSession session) {
+        SessionUserDto sessionUserDto = (SessionUserDto) session.getAttribute(Define.SESSION_USER);
+        UserResponse.DetailDto user = userService.findDetail(sessionUserDto.getId());
+        model.addAttribute("user", user);
+        return "user/detail";
     }
 }

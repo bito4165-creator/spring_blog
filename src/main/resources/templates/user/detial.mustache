@@ -1,0 +1,38 @@
+{{> layout/header}}
+
+<div class="container p-5">
+    <div class="card">
+        <div class="card-header"><b>마이페이지</b></div>
+        <div class="card-body">
+            <div class="text-center mb-4">
+                <!--   프로필 이미지 있을 경우              -->
+                <img src="https://picsum.photos/200/300" alt="" class="rounded-circle border"
+                     style="width: 200px; height: 200px; object-fit: cover">
+                <form action="/user/profile-image/delete" method="post" class="mt-2">
+                    <button type="submit" class="btn btn-sm btn-danger"
+                            onclick="return confirm('사진을 삭제하시겠습니까?');">프로필 사진 삭제</button>
+                </form>
+                <!--   프로필 이미지 없을 경우              -->
+            </div>
+
+            <div class="mb-3">
+                <label for="" class="form-label fw-bold">사용자명</label>
+                <p class="form-control-plaintext">홍길동</p>
+            </div>
+            <div class="mb-3">
+                <label for="" class="form-label fw-bold">이메일</label>
+                <p class="form-control-plaintext">aa@naver.com</p>
+            </div>
+            <div class="mb-3">
+                <label for="" class="form-label fw-bold">가입일</label>
+                <p class="form-control-plaintext">2026.10.19</p>
+            </div>
+            <div class="mb-3">
+                <a href="/user/update" class="btn btn-primary">회원 정보 수정</a>
+                <a href="/" class="btn btn-secondary">목록으로</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> layout/footer}}
