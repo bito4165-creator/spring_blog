@@ -13,8 +13,6 @@ import java.sql.Timestamp;
 @Table(name = "user_tb")
 @Entity
 public class User {
-    // 프로필 이미지 파일 이름 (선택 사항이므로 null 가능)
-    private String profileImage;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,6 +29,9 @@ public class User {
     @CreationTimestamp // now()
     private Timestamp createdAt;
 
+    // 프로필 이미지 파일 이름 (선택 사항이므로 null 가능)
+    private String profileImage;
+
     // id 와 createdAt은 자동으로 채워지므로 빌더에서 제외
     @Builder
     public User(String username, String password, String email, String profileImage) {
@@ -40,14 +41,13 @@ public class User {
         this.profileImage = profileImage;
     }
 
-    // 프로필 이미지 변경(null 이면 삭제) - 트랜잭션 안에서 호출하면 더티 체킹 발생 됨
-    public void updateProfileImage(String profileImage) {
-        this.profileImage = profileImage;
-    }
-
     // 회원 정보 수정 (변경 감지용)
     public void update(String password) {
         this.password = password;
     }
 
+    // 포르필 이미지 변경 (null 이면 삭제) = 트랜잭션안에서 호출하면 더티 체킹 발샐 됨.
+    public void updateProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
 }

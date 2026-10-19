@@ -54,6 +54,15 @@ public class FileUtil {
         return savedFilename;
     }
 
+
+    // 편의 메서드 : 허용한 이미지 형식인지 확인
+    public static boolean isImageFile(MultipartFile file) {
+        if (file == null || file.getContentType() == null) {
+            return false; // 형식 정보가 없으면 허용하지 않음
+        }
+        return IMAGE_TYPES.containsKey(file.getContentType());
+    }
+
     // 파일 삭제 (파일 이름이 없거나 파일이 이미 없으면 아무 일도 하지 않음)
     public static void deleteFile(String filename) {
         if (filename == null || filename.isBlank()) {
@@ -67,11 +76,4 @@ public class FileUtil {
         }
     }
 
-    // 편의 메서드 : 허용한 이미지 형식인지 확인
-    public static boolean isImageFile(MultipartFile file) {
-        if(file == null || file.getContentType() == null) {
-            return false; // 형식 정보가 없으면 허용하지 않음
-        }
-        return IMAGE_TYPES.containsKey(file.getContentType());
-    }
 }

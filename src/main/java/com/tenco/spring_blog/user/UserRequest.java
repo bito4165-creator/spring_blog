@@ -4,6 +4,7 @@ import com.tenco.spring_blog._core.error.Exception400;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
+
 public class UserRequest {
 
     // 회원정보 수정용 DTO
@@ -12,23 +13,22 @@ public class UserRequest {
         private String password;
         private MultipartFile profileImage; // 새 프로필 이미지 (선택 사항)
 
-        // 비밀번호를 입력했는지 (null, "", "   " ,공백만 입력 모두 -> 입력 안함으로 볼 예정)
+
+        // 비밀번호 입력했느지 (null, "", " ", "     " 공백만 입력 모두 -> 입력안함으로 볼 예정
         public boolean hasPassword() {
-            // 비밀번호 입력시 --> true 반환
+            // 비밀번호 입력시 -> true 반환
             return password != null && !password.isBlank();
         }
 
-        // 새 프로필 사진을 골랐는지
+        // 새 프르필 사진 골랐는지
         public boolean hasProfileImage() {
-            // 새 파일 선택 시 --> true 반환
-            return profileImage != null && !profileImage.isEmpty();
+            return profileImage != null && !password.trim().isEmpty();
         }
-
         public void validate() {
-            if (!hasPassword() && !hasProfileImage()) {
+            if (hasPassword() && hasProfileImage()) {
                 throw new Exception400("변경할 비밀번호나 프로필 사진을 입력해주세요");
             }
-            if (hasPassword() && password.length() < 4) {
+            if (password.length() < 4) {
                 throw new Exception400("비밀번호는 4글자 이상이어야 합니다");
             }
             // 필요하다면 길이 수 제한, 특수문자 포함여부 (정규식) 활용 가능
@@ -44,6 +44,7 @@ public class UserRequest {
         private MultipartFile profileImage; // 프로필 이미지 (선택 사항)
 
         // 회원가입시 데이터 검증 메서드
+
         public void validate() {
             if(username == null || username.trim().isEmpty()) {
                 throw new Exception400("사용자명은 필수 입니다. ");
@@ -64,7 +65,7 @@ public class UserRequest {
         // DTO 에서 User 엔티티로 변환하는 메서드
         // 계층 간 데이터 변환을 명확하게 분리하는 것이 좋다.
         // toEntity() <-- 메서드 이름 (이 메서드를 호출하면 User 객체를 반환하는 코드를 작성하시오)
-        public User toEntity(String profileImageFilename) {
+        public User toEntity() {
             return User.builder()
                     .username(username)
                     .password(password)

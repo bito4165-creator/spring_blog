@@ -49,10 +49,10 @@ public class UserService {
                     throw new Exception400("이미 사용 중인 이메일입니다");
                 });
 
-        // 3. 프로필 이미지 저장 ( 새로게 생긴 파일 이름이 리턴 됨)
+        // 3. 프로필 이미지 저장 (새롭게 생긴 파일 이름이 리턴 됨)
         String profileImage = FileUtil.saveImage(joinDto.getProfileImage());
 
-        // 4. 프로필 파일 이름과 회원 정보 저장
+        // 4. 프로필 파일 이름과 회원정보 저장
         User savedUser = userJpaRepository.save(joinDto.toEntity(profileImage));
         log.info("회원가입 서비스 처리 완료 - 사용자명: {}, ID: {} ", joinDto.getUsername(), savedUser.getId());
         return new UserResponse.JoinDto(savedUser);
@@ -126,9 +126,17 @@ public class UserService {
                 .orElseThrow(() -> new Exception404("사용자를 찾을 수 없습니다"));
     }
 
-    // 마이페이지 조회 기능
+    // 마이페이지 조회기능
     public UserResponse.DetailDto findDetail(Long userId) {
         User user = findById(userId);
-        return new UserResponse.DetailDto(user);
+        return  new UserResponse.DetailDto(user);
+    }
+
+    @Transactional
+    public void deleteProfileImage(Long userId) {
+        User user = findById(userId);
+        String oldImage = user.getProfileImage();
+        user.updateProfileImage(null); // 1. DB에  파일 일므 비우기 (변경 감지)
+        FileUtil.deleteFile(oldImage); // 2. 폴더 실제 파일 삭제
     }
 }
