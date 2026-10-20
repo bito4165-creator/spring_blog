@@ -13,22 +13,23 @@ public class UserRequest {
         private String password;
         private MultipartFile profileImage; // 새 프로필 이미지 (선택 사항)
 
-
-        // 비밀번호 입력했느지 (null, "", " ", "     " 공백만 입력 모두 -> 입력안함으로 볼 예정
+        // 비밀번호를 입력했는지 (null, "", "   " ,공백만 입력 모두 -> 입력 안함으로 볼 예정)
         public boolean hasPassword() {
-            // 비밀번호 입력시 -> true 반환
+            // 비밀번호 입력시 --> true 반환
             return password != null && !password.isBlank();
         }
 
-        // 새 프르필 사진 골랐는지
+        // 새 프로필 사진을 골랐는지
         public boolean hasProfileImage() {
-            return profileImage != null && !password.trim().isEmpty();
+            // 새 파일 선택 시 --> true 반환
+            return profileImage != null && !profileImage.isEmpty();
         }
+
         public void validate() {
-            if (hasPassword() && hasProfileImage()) {
+            if (!hasPassword() && !hasProfileImage()) {
                 throw new Exception400("변경할 비밀번호나 프로필 사진을 입력해주세요");
             }
-            if (password.length() < 4) {
+            if (hasPassword() && password.length() < 4) {
                 throw new Exception400("비밀번호는 4글자 이상이어야 합니다");
             }
             // 필요하다면 길이 수 제한, 특수문자 포함여부 (정규식) 활용 가능
