@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.UUID;
+
 @RequiredArgsConstructor // DI
 @Slf4j
 @Controller // IoC (제어의 역전) 싱글톤 패턴으로 관리 됨.
@@ -26,18 +28,47 @@ public class UserController {
 
     private final UserService userService;
     private final KakaoLoginService kakaoLoginService;
+    private final NaverLoginService naverLoginService;
 
     @GetMapping("/kakao-login")
     public String kakaoLogin() {
         return "redirect:" + kakaoLoginService.getAuthorizeUrl();
     }
 
-    // 리다이렉트로
+    // 리다이렉트로 들어와서 카카오 서버가 code 값을 동적으로 꼽아주는 URL 입니다
     @GetMapping("/oauth/kakao")
     public String kakaoCallback(@RequestParam(name = "code", required = false) String code, HttpSession session) {
        SessionUserDto sessionUserDto = kakaoLoginService.login(code);
        session.setAttribute(Define.SESSION_USER, sessionUserDto);
        return "redirect:/";
+    }
+
+    @GetMapping("naver-login")
+    public String naverLogin(HttpSession session) {
+        String state = UUID.randomUUID().toString();
+
+        session.setAttribute("naverState", state);
+
+        return "redirect:" + naverLoginService.getAuthorizeUrl(state);
+    }
+
+    @GetMapping("/login/oauth2/code/naver")
+    public String naverCallback(@RequestParam(value = "code", required = false)String code,
+                                @RequestParam(value = "state", required = false)String state,
+                                HttpSession session) {
+        // 세션에 저장해둔 state 가져오기
+        String sessionState = (String) session.getAttribute("naverState");
+
+        // 사용이 끝난 state는 세션에서 제거
+        session.removeAttribute("naverState");
+
+        // 네이버 로그인 서비스 호출 (code,state)
+        SessionUserDto sessionUserDto = naverLoginService.login(code, state, sessionState);
+
+        // 세션에 사용자 정보 저장
+        session.setAttribute(Define.SESSION_USER, sessionUserDto);
+
+        return "redirect:/";
     }
 
 

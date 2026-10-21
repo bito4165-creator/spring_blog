@@ -151,8 +151,11 @@ public class UserService {
     public void deleteProfileImage(Long userId) {
         User user = findById(userId);
         String oldImage = user.getProfileImage();
-        user.updateProfileImage(null); // 1. DB에  파일 일므 비우기 (변경 감지)
-        FileUtil.deleteFile(oldImage); // 2. 폴더 실제 파일 삭제
+        user.updateProfileImage(null); // 1. DB에  파일 이름 비우기 (변경 감지)
+        // 2. 이미지가 존재하고, 외부 URL(http 나 https 가 아닐때만 로컬 파일 삭제)
+        if (oldImage != null && !oldImage.isBlank() && !oldImage.startsWith("http")) {
+            FileUtil.deleteFile(oldImage); // 3. 폴더 실제 파일 삭제
+        }
     }
 
 
@@ -184,6 +187,35 @@ public class UserService {
                 .profileImage(kakaoUserInfo.getProperties().getProfileImage())
                 .provider(OAuthProvider.KAKAO)
                 .email(username + "@kakao.com")
+                .build();
+        newUser.addRole(Role.USER);
+        return userJpaRepository.save(newUser);
+    }
+
+    @Transactional
+    public SessionUserDto naverLogin(UserResponse.naverUserInfo naverUserInfo) {
+        // 네이버 고유 ID로 사용자명 생성
+        String username = "naver" + naverUserInfo.getResponse().getId();
+
+        // 이미 가입했는지 확인 없으면, 자동 가입
+        User user = userJpaRepository.findByUsername(username)
+                .orElseGet(() ->joinNaverUser(username, naverUserInfo));
+
+        // 같은 이름으로 다른 Provider 사용자가 존재할 경우
+        if (user.getProvider() != OAuthProvider.NAVER) {
+            throw new Exception400("이미 사용중인 사용자명입니다.");
+        }
+        return new SessionUserDto(user);
+    }
+
+    private User joinNaverUser(String username, UserResponse.naverUserInfo naverUserInfo) {
+        UserResponse.naverUserInfo.Response profile =  naverUserInfo.getResponse();
+        User newUser = User.builder()
+                .username(username)
+                .password(passwordEncoder.encode(UUID.randomUUID().toString()))
+                .email(profile.getEmail() != null ? profile.getEmail() : username + "@naver.com")
+                .profileImage(profile.getProfileImage())
+                .provider(OAuthProvider.NAVER)
                 .build();
         newUser.addRole(Role.USER);
         return userJpaRepository.save(newUser);

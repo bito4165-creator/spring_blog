@@ -82,27 +82,61 @@ public class UserResponse {
     public static class KakaoUserInfo {
 
         private Long id;
-
         @JsonProperty("connected_at")
         private String connectedAt;
-
         private Properties properties;
-
         @JsonProperty("kakao_account")
         private Object kakaoAccount;
-
         @Getter
         @Setter
         public static class Properties {
-
             private String nickname;
-
             @JsonProperty("profile_image")
             private String profileImage;
-
             @JsonProperty("thumbnail_image")
             private String thumbnailImage;
         }
     }
 
+    // 1. 네이버 액세스 토큰 응답 DTO
+    @Getter
+    @Setter
+    public static class naverToken {
+        @JsonProperty("access_token")
+        private String accessToken;
+        @JsonProperty("refresh_token")
+        private String refreshToken;
+        @JsonProperty("token_type")
+        private String tokenType;
+        @JsonProperty("expires_in")
+        private Integer expiresIn;
+        private String error;
+        @JsonProperty("error_description")
+        private String errorDescription;
+    }
+
+    // 2. 네이버 소셜 로그인 사용자 정보 DTO
+    @Getter
+    @Setter
+    public static class naverUserInfo {
+        private String resultcode;
+        private String message;
+        private Response response;
+
+        @Getter
+        @Setter
+        public static class Response {
+            private String id;
+            private String nickname;
+            private String name;
+            private String email;
+            private String gender;
+            private String age;
+            private String birthday;
+            @JsonProperty("profile_image")
+            private String profileImage;
+            private String birthyear;
+            private String mobile;
+        }
+    }
 }
