@@ -1,7 +1,7 @@
 
 package com.tenco.spring_blog.board;
 
-import com.tenco.spring_blog.user.Provider; // 확인 필요: Provider enum의 실제 패키지와 클래스명
+import com.tenco.spring_blog.user.OAuthProvider;
 import com.tenco.spring_blog.user.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceUnitUtil;
@@ -14,7 +14,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,7 +33,7 @@ class BoardJpaRepositoryTest {
                 .username(username)
                 .password("encoded-password")
                 .email(username + "@test.com")
-                .provider(Provider.LOCAL) // 확인 필요: 실제 enum 타입과 LOCAL 상수
+                .provider(OAuthProvider.LOCAL) // 확인 필요: 실제 enum 타입과 LOCAL 상수
                 .build();
 
         em.persist(user);

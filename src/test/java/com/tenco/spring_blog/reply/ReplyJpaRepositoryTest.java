@@ -1,12 +1,10 @@
 package com.tenco.spring_blog.reply;
 
 import com.tenco.spring_blog.board.Board; // 확인 필요: Board 엔티티 패키지
-import com.tenco.spring_blog.user.Provider; // 확인 필요: Provider enum 패키지
+import com.tenco.spring_blog.user.OAuthProvider;
 import com.tenco.spring_blog.user.User; // 확인 필요: User 엔티티 패키지
-
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceUnitUtil;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest; // Spring Boot 4 경로
@@ -30,7 +28,7 @@ class ReplyJpaRepositoryTest {
                 .username(username) // 확인 필요: User에 username 필드와 빌더가 있다고 가정
                 .password("test-password") // 확인 필요: User에 password 필드가 있다고 가정
                 .email(username + "@test.com") // 확인 필요: User에 email 필드가 있다고 가정
-                .provider(Provider.LOCAL) // 확인 필요: 실제 Provider enum 값 확인
+                .provider(OAuthProvider.LOCAL) // 확인 필요: 실제 Provider enum 값 확인
                 .build();
 
         em.persist(user);
@@ -50,9 +48,9 @@ class ReplyJpaRepositoryTest {
     }
 
     // 테스트용 Reply 생성
-    private Reply createReply(String content, Board board, User user) {
+    private Reply createReply(String comment, Board board, User user) {
         Reply reply = Reply.builder()
-                .content(content) // 확인 필요: Reply의 댓글 내용 필드가 content라고 가정
+                .comment(comment) // 확인 필요: Reply의 댓글 내용 필드가 content라고 가정
                 .board(board) // 확인 필요: Reply에 Board 연관관계가 있다고 가정
                 .user(user) // 확인 필요: Reply에 User 연관관계가 있다고 가정
                 .build();
@@ -219,7 +217,7 @@ class ReplyJpaRepositoryTest {
                 replyJpaRepository.findAllByBoardIdJoinUser(otherBoard.getId());
 
         assertThat(remainingReplies).hasSize(1);
-        assertThat(remainingReplies.get(0).getContent())
+        assertThat(remainingReplies.get(0).getComment())
                 .isEqualTo("유지할 댓글"); // 확인 필요: Reply의 내용 getter가 getContent라고 가정
     }
 
