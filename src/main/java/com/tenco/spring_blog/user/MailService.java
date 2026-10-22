@@ -56,7 +56,7 @@ public class MailService {
         session.removeAttribute(Define.EMAIL_CODE_PREFIX + email);
 
         // 인증을 마친 이메일을 세션에 기록해야 함 (회원가입 시 서버가 확인) - 인증된 이메일이 아닌 변조해서 던질 수 있음.
-        session.setAttribute(Define.EMAIL_CODE_PREFIX, email);
+        session.setAttribute(Define.VERIFIED_EMAIL, email);
         return true;
     }
 }
