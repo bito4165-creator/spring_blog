@@ -3,7 +3,6 @@ package com.tenco.spring_blog.user;
 import com.tenco.spring_blog._core.error.Exception400;
 import com.tenco.spring_blog._core.util.Define;
 import jakarta.servlet.http.HttpSession;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
-
 
 
 @Slf4j

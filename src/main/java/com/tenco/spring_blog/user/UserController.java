@@ -51,7 +51,7 @@ public class UserController {
 
 
     // GET http://localhost:8080/user/detail
-    @GetMapping("user/detail")
+    @GetMapping("/user/detail")
     public String detail(Model model, HttpSession session) {
         SessionUserDto sessionUserDto = (SessionUserDto) session.getAttribute(Define.SESSION_USER);
         UserResponse.DetailDto user = userService.findDetail(sessionUserDto.getId());

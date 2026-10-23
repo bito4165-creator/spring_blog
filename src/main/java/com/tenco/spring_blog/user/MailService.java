@@ -12,6 +12,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -28,7 +29,7 @@ public class MailService {
     // recode 문법 : JDK 16 정식으로 사용할 수 있음
     // 이 아래 한줄이 클래스를 설계해 준다. 필드 + getter + equals + hashCode + toString 을 가진 녀석을
     // Java가 대신 만들어 준다. (주의 - setter는 없다)
-    private record EmailCode(String code, LocalDateTime expiresAt) {
+    private record EmailCode(String code, LocalDateTime expiresAt) implements Serializable {
         boolean isExpired() {
             return LocalDateTime.now().isAfter(expiresAt);
         }
