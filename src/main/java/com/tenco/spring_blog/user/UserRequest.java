@@ -2,12 +2,29 @@ package com.tenco.spring_blog.user;
 
 import com.tenco.spring_blog._core.error.Exception400;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 
 import java.rmi.server.ExportException;
 
 
 public class UserRequest {
+
+    // 포인트 충전 요청 DTO(테스트용 충전 API, 실제 서비스는 결제 연동으로 대체)
+    @Data
+    public static class PointChargeDto {
+        private Integer amount; // 충전할 포인트
+
+        public void validate() {
+            if (amount == null || amount <= 0) {
+                throw new Exception400("충전할 포인트는 0보다 커야 합니다");
+            }
+            if (amount > 100000) {
+                throw new Exception400("한번에 100,000 포인트까지 충전할 수 있습니다");
+            }
+        }
+    }
 
     @Data
     // 이메일 인증 요청 DTO (발송, 확인 API에서 함께 사용)

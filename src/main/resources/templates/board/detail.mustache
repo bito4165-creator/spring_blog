@@ -1,44 +1,58 @@
 {{> layout/header}}
 
 <div class="container p-5">
-    <div class="card">
-        <div class="card-header"><b>마이페이지</b></div>
-        <div class="card-body">
-            <div class="text-center mb-4">
-                <!--   프로필 이미지 있을 경우              -->
-                {{#user.profileImage}}
-                    <img src="/images/{{user.profileImage}}" alt="" class="rounded-circle border"
-                         style="width: 200px; height: 200px; object-fit: cover">
-                    <form action="/user/profile-image/delete" method="post" class="mt-2">
-                        <button type="submit" class="btn btn-sm btn-danger"
-                                onclick="return confirm('사진을 삭제하시겠습니까?');">프로필 사진 삭제</button>
-                    </form>
-                {{/user.profileImage}}
-                <!--   프로필 이미지 없을 경우              -->
-                {{^user.profileImage}}
-                    <div class="rounded-circle border bg-secondary d-inline-flex align-items-center justify-content-center"
-                         style="width: 200px; height: 200px;" >
-                        <span class="text-white">프로필 사진 없음</span>
-                    </div>
-                {{/user.profileImage}}
-            </div>
 
-            <div class="mb-3">
-                <label for="" class="form-label fw-bold">사용자명</label>
-                <p class="form-control-plaintext">{{user.username}}</p>
-            </div>
-            <div class="mb-3">
-                <label for="" class="form-label fw-bold">이메일</label>
-                <p class="form-control-plaintext">{{user.email}}</p>
-            </div>
-            <div class="mb-3">
-                <label for="" class="form-label fw-bold">가입일</label>
-                <p class="form-control-plaintext">{{user.createdAt}}</p>
-            </div>
-            <div class="mb-3">
-                <a href="/user/update" class="btn btn-primary">회원 정보 수정</a>
-                <a href="/" class="btn btn-secondary">목록으로</a>
-            </div>
+
+    {{#isOwner}}
+        <div class="d-flex justify-content-end">
+            <a href="/board/{{board.id}}/update" class="btn btn-warning me-1">수정</a>
+            <form action="/board/{{board.id}}/delete" method="post">
+                <button class="btn btn-danger">삭제</button>
+            </form>
+        </div>
+    {{/isOwner}}
+
+    <div class="d-flex justify-content-end">
+        <b>작성자</b> : {{board.username}}
+    </div>
+
+    <div>
+        <h2><b>{{board.title}}</b></h2>
+        <hr>
+        <div class="m-4 p-2">
+            {{board.content}}
+        </div>
+    </div>
+
+    {{! 댓글: 아직 기능이 없어 화면만 만들어 둡니다 }}
+    <div class="card mt-3">
+        <div class="card-body">
+            <form action="/reply/save" method="post">
+                <input type="hidden" name="boardId" value="{{board.id}}">
+                <textarea class="form-control" rows="2" name="comment" placeholder="댓글을 입력하세요"></textarea>
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-outline-primary mt-1">댓글 등록</button>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer"><b>댓글 목록</b></div>
+        <div class="list-group">
+            <!-- 댓글 1 시작 -->
+            {{#replyList}}
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div class="d-flex">
+                        <div class="px-1 me-1 bg-primary text-white rounded">{{username}}</div>
+                        <div>{{comment}}</div>
+                    </div>
+                    {{#isOwner}}
+                        <form action="/reply/{{id}}/delete" method="post">
+                            <input type="hidden" name="boardId" value="{{board.id}}">
+                            <button class="btn"><i class="fa-solid fa-trash"></i></button>
+                        </form>
+                    {{/isOwner}}
+                </div>
+            {{/replyList}}
+            <!-- 댓글 1 종료 -->
         </div>
     </div>
 </div>

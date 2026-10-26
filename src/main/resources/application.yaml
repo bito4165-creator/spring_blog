@@ -9,7 +9,7 @@ spring:
       max-file-size: 10MB  # 파일 하나의 최대 크기
       max-request-size: 11MB  # 요청 전체 (파일+입력값)의 최대 크기
   profiles:
-    active: local
+    active: dev
   # 메일 발송 설정 (추가)
   mail:
     host: smtp.gmail.com        # Gmail SMTP 서버 주소
@@ -23,9 +23,9 @@ spring:
           starttls:
             enable: true            # 암호화 연결(TLS)로 전환
             required: true          # 전환에 실패하면 보내지 않음
-          connectiontimeout: 5000   # 서버 연결을 기다리는 최대 시간 (밀리초)
+          connection timeout: 5000   # 서버 연결을 기다리는 최대 시간 (밀리초)
           timeout: 5000             # 서버 응답을 기다리는 최대 시간 (밀리초)
-          writetimeout: 5000        # 데이터를 보내는 데 걸리는 최대 시간 (밀리초)
+          write timeout: 5000        # 데이터를 보내는 데 걸리는 최대 시간 (밀리초)
 
 server:
   servlet:
