@@ -4,12 +4,15 @@ package com.tenco.spring_blog.user;
 import com.tenco.spring_blog._core.error.Exception400;
 import com.tenco.spring_blog._core.error.Exception404;
 import com.tenco.spring_blog._core.util.FileUtil;
+import com.tenco.spring_blog.purchase.Purchase;
+import com.tenco.spring_blog.purchase.PurchaseJpaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
