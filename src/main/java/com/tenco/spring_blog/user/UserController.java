@@ -3,6 +3,7 @@ package com.tenco.spring_blog.user;
 import com.tenco.spring_blog._core.error.UnauthorizedException;
 import com.tenco.spring_blog._core.util.Define;
 import com.tenco.spring_blog.purchase.Purchase;
+import com.tenco.spring_blog.purchase.PurchaseResponse;
 import com.tenco.spring_blog.purchase.PurchaseService;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpSession;
@@ -39,7 +40,7 @@ public class UserController {
         if (sessionUserDto == null) {
             return "redirect:/login";
         }
-        List<Purchase> purchaseList = purchaseService.getPurchaseList(sessionUserDto.getId());
+        List<PurchaseResponse.ListDto> purchaseList = purchaseService.getPurchaseList(sessionUserDto.getId());
         model.addAttribute("purchaseList", purchaseList);
         return "user/purchase-list";
     }

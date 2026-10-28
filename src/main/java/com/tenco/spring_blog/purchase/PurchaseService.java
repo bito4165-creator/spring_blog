@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -55,7 +56,12 @@ public class PurchaseService {
     }
 
     // 마이 페이지 구매목록 조회
-    public List<Purchase> getPurchaseList(Long userId) {
-        return purchaseJpaRepository.findByUserIdWithBoardAndWriter(userId);
-    }
+    public List<PurchaseResponse.ListDto> getPurchaseList(Long userId) {
+        List<Purchase> purchaseList = purchaseJpaRepository.findByUserIdWithBoardAndWriter(userId);
+
+        // 엔티티 -> DTO 변환
+        return purchaseList.stream()
+                .map(PurchaseResponse.ListDto::new)
+                .toList();
+     }
 }

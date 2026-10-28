@@ -45,12 +45,4 @@ public class Purchase {
         this.price = price;
     }
 
-    // [추가] 뷰에서 yyyy-MM-dd HH:mm 형식으로 출력하기 위한 편의 메서드
-    public String getFormattedCreatedAt() {
-        if (this.createdAt == null) {
-            return "";
-        }
-        return this.createdAt.toLocalDateTime()
-                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-    }
 }
