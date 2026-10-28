@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -93,4 +95,19 @@ public class PaymentService {
 
         return new PaymentResponse.CompleteDto(payment.getAmount(), user.getPoint());
     }
+
+    // 결제 내역 엔티티 --> DTO로 변환
+    public List<PaymentResponse.ListDto> getPaymentList(Long userId) {
+        List<Payment> paymentList = paymentJpaRepository.findByUserIdOrderByCratedAtASC(userId);
+
+        List<PaymentResponse.ListDto> dtoList = new ArrayList<>();
+
+        for (int i = 0; i <paymentList.size(); i++) {
+            dtoList.add(new PaymentResponse.ListDto(paymentList.get(i), i+1));
+        }
+
+        return dtoList;
+    }
+
+
 }

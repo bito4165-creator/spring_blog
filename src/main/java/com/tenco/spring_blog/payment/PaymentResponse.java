@@ -1,6 +1,7 @@
 package com.tenco.spring_blog.payment;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.tenco.spring_blog._core.util.MyDateUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -45,6 +46,31 @@ public class PaymentResponse {
         @JsonIgnoreProperties(ignoreUnknown = true)
         public static class Amount {
             private Integer total;
+        }
+    }
+
+    //구매내역 응답 DTO
+    @Data
+    public static class ListDto {
+        private Long id;
+        private int rowNum;
+        private String paymentId;
+        private String pgTxId;
+        private int amount;
+        private String status;
+        private String purchasedAt;
+
+        public ListDto(Payment payment, int index) {
+            this.id = payment.getId();
+            this.rowNum = index;
+            this.paymentId = payment.getPaymentId();
+            this.pgTxId = payment.getPgTxId() != null ? payment.getPgTxId() : "-";
+            this.amount = payment.getAmount();
+
+            if (payment.getStatus() != null) {
+                this.status = payment.getStatus().getDescription();
+            }
+            this.purchasedAt = MyDateUtil.timestampFormat(payment.getCreatedAt());
         }
     }
 

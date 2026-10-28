@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface PaymentJpaRepository extends JpaRepository<Payment, Long> {
@@ -18,4 +19,8 @@ public interface PaymentJpaRepository extends JpaRepository<Payment, Long> {
             WHERE p.paymentId = :paymentId
             """)
     boolean existsByPaymentId(@Param("paymentId") String paymentId);
+
+
+    @Query("SELECT p FROM Payment p WHERE p.user.id = :userId ORDER BY p.createdAt ASC")
+    List<Payment> findByUserIdOrderByCratedAtASC(@Param("userId") Long userId);
 }
