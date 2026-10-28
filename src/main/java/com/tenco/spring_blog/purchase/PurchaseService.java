@@ -53,4 +53,9 @@ public class PurchaseService {
                 .build();
         purchaseJpaRepository.save(purchase);
     }
+
+    // 마이 페이지 구매목록 조회
+    public List<Purchase> getPurchaseList(Long userId) {
+        return purchaseJpaRepository.findByUserIdWithBoardAndWriter(userId);
+    }
 }

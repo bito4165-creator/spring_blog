@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PurchaseJpaRepository extends JpaRepository<Purchase, Long> {
+    // 특정 사용자의 구매 내역 목록을 게시글, 게시글 작성자와 함께 한 번에 조회 (N+1 문제 해결)
+    @Query("SELECT p FROM Purchase p JOIN FETCH p.board b JOIN FETCH b.user WHERE p.user.id = :userId")
+    List<Purchase> findByUserIdWithBoardAndWriter(@Param("userId") Long userId);
     // 구매 내역 조회 (해당 게시글 pk 기준)
     @Query("SELECT p FROM Purchase p WHERE p.user.id = :userId AND p.board.id = :boardId")
     Optional<Purchase> findByUserIdAndBoardId(@Param("userId") Long userId, @Param("boardId") Long boardId);

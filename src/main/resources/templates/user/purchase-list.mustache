@@ -1,0 +1,47 @@
+{{> layout/header}}
+
+<div class="container p-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-light">
+            <b class="fs-5">구매 내역</b>
+        </div>
+        <div class="card-body">
+
+            <!-- 1. 데이터가 있을 때 예시 카드 (머스태치 반복문 적용 전 테스트용) -->
+            {{#purchaseList}}
+                <div class="card mb-3 border">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="card-title text-primary fw-bold mb-0">{{board.title}}</h5>
+                            <span class="badge bg-primary px-3 py-2 fs-6">{{price}} P</span>
+                        </div>
+                        <p class="card-text text-secondary mb-1">
+                            작성자: {{board.user.username}}
+                        </p>
+                        <p class="card-text text-secondary mb-0">
+                            구매일: {{formattedCreatedAt}}
+                        </p>
+                    </div>
+                </div>
+            {{/purchaseList}}
+            <!-- 2. 데이터가 없을 때 안내 문구 -->
+            {{^purchaseList}}
+                <div class="text-center py-5">
+                    <div class="mb-3 text-secondary fs-1">
+                        🛒
+                    </div>
+                    <h5 class="text-dark fw-bold mb-1">구매 내역이 없습니다</h5>
+                    <p class="text-muted mb-4">유료 게시글을 구매해보세요!</p>
+                    <a href="/" class="btn btn-primary px-4">게시글 목록으로</a>
+                </div>
+            {{/purchaseList}}
+            <!-- 하단 회원정보로 돌아가기 버튼 -->
+            <div class="mt-4">
+                <a href="/user/detail" class="btn btn-secondary">회원정보로 돌아가기</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{{> layout/footer}}
