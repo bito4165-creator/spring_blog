@@ -1,11 +1,33 @@
 package com.tenco.spring_blog.payment;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.tenco.spring_blog._core.util.MyDateUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
 public class PaymentResponse {
+
+    // 결제 내역(포인트 결제) 응답 DTO
+    @Data
+    public static class ListDto {
+        private Long id; // 결제 내역 PK
+        private String paymentId; // 결제 번호
+        private String pgTxId;
+        private int amount;
+        private String statusDisplay; // 상태 표시 이름 (결제 완료)
+        private String paidAt;
+
+        @Builder
+        public ListDto(Payment payment) {
+            this.id = payment.getId();
+            this.paymentId = payment.getPaymentId();
+            this.pgTxId = payment.getPgTxId();
+            this.amount = payment.getAmount();
+            this.statusDisplay = payment.getStatus().getDisplayName(); // 결제 완료, 결제 대기 , 결제 취소
+            this.paidAt = MyDateUtil.timestampFormat(payment.getCreatedAt());
+        }
+    }
 
     // 1단계 응답 : 브라우저가 경제창을 띄울 때 사용
     @Data
