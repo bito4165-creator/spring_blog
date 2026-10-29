@@ -40,9 +40,6 @@ public class UserController {
     @GetMapping("/user/payment/list")
     public String paymentList(Model model,HttpSession session) {
         SessionUserDto sessionUserDto = (SessionUserDto) session.getAttribute(Define.SESSION_USER);
-        if (sessionUserDto == null) {
-            return "redirect:/";
-        }
         List<PaymentResponse.ListDto> paymentList = paymentService.findAllByUserId(sessionUserDto.getId());
         model.addAttribute("paymentList", paymentList);
         return "user/payment-list";

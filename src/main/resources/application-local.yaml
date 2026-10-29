@@ -40,7 +40,7 @@ spring:
   # 서버 시작시 이 파일 실행
   sql:
     init:
-      mode: always   # MySQL 사용시 필수  (always, never)
+      mode: never   # MySQL 사용시 필수  (always, never)
       data-locations:
         - classpath:db/data.sql
 

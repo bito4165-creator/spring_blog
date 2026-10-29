@@ -2,6 +2,7 @@ package com.tenco.spring_blog.payment;
 
 import com.tenco.spring_blog._core.error.Exception400;
 import com.tenco.spring_blog._core.error.Exception403;
+import com.tenco.spring_blog.refund.RefundRepository;
 import com.tenco.spring_blog.user.User;
 import com.tenco.spring_blog.user.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,14 +23,46 @@ public class PaymentService {
 
     private final PaymentJpaRepository paymentJpaRepository;
     private final UserJpaRepository userJpaRepository;
+    private final RefundRepository refundRepository;
 
     public List<PaymentResponse.ListDto> findAllByUserId(Long userId) {
+        // 1. 화면에 보여 줄 상태 목록 (READY는 제외) - List<Payment> (로그인한 유저의 리스트)
         List<Payment> paymentList = paymentJpaRepository
-                .findAllByUserIdAndStatus(userId, PaymentStatus.PAID);
+                .findAllByUserIdAndStatusList(userId, List.of(PaymentStatus.PAID, PaymentStatus.CANCELLED));
+        // 환불 테이블에 내가 요청 PK 정보만 리스트로 뽑아온다
+        List<Long> refundedPaymentPkList = refundRepository.findPaymentPkListByUserId(userId);
 
-        return paymentList.stream()
-                .map(PaymentResponse.ListDto::new)
-                .toList();
+        // 객체 탐색 ---> 단방향 --->
+
+        // 양방향 으로 쿼리르 짜면 N+1 문제가 발생함 (JOIN FETCH를 써도 쿼리가 더 길어진다)
+
+        // 결제 1건씩 DTO로 바꾸면서 환불 버튼을 보여 줄지 결정해야 한다.
+        List<PaymentResponse.ListDto> resultList = new ArrayList<>();
+        for (Payment payment : paymentList) {
+            boolean refundable = false; // 기본값은 버튼 숨김
+
+            // Payment 텡블에 PAID 상태이고, 아직 환불 요청한적이 없을 때
+            if (payment.isPaid()) {
+                boolean isRefundRequest = refundedPaymentPkList.contains(payment.getId());
+                if (isRefundRequest == false) {
+                    refundable = true;
+                }
+            }
+            resultList.add(new PaymentResponse.ListDto(payment, refundable));
+        }
+        return resultList;
+
+        // 응답 DTO 설계 후 리턴
+//        return paymentList.stream()
+//                // 2. 결제 완료 상태면 환불 가능 (아니면 불가) 추후 연산해서 만들어서 내려준다
+//                .map(payment -> {
+//                    boolean isPaid = payment.isPaid();
+//                    boolean alreadyRequested = refundedPaymentPkList.contains(payment.getId());
+//                    boolean refundable = isPaid && !alreadyRequested;
+//                    return new PaymentResponse.ListDto(payment, refundable);
+//                })
+//                .toList();
+
     }
 
     /**
